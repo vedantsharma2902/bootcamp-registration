@@ -1,0 +1,798 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootcamp Admin Dashboard</title>
+  <style>
+    :root {
+      --gold: #d6ad55;
+      --gold-light: #f2d58b;
+      --bg: #090909;
+      --panel: #151515;
+      --panel2: #1d1d1d;
+      --text: #f5f5f5;
+      --muted: #999;
+      --border: #333;
+      --red: #e05252;
+      --green: #43bd83;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .hidden { display: none !important; }
+
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 410px;
+      background: var(--panel);
+      border: 1px solid #554421;
+      border-radius: 18px;
+      padding: 30px 24px;
+      box-shadow: 0 15px 50px #000;
+    }
+
+    .brand {
+      color: var(--gold-light);
+      text-align: center;
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin: 8px 0 25px;
+      font-size: 13px;
+    }
+
+    label {
+      display: block;
+      color: #ccc;
+      font-size: 13px;
+      margin: 15px 0 7px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      background: #101010;
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 15px;
+      font-weight: 700;
+    }
+
+    .primary {
+      background: var(--gold);
+      color: #111;
+    }
+
+    .primary:hover { background: var(--gold-light); }
+
+    .full { width: 100%; margin-top: 20px; }
+
+    .secondary {
+      background: #292929;
+      color: white;
+      border: 1px solid #444;
+    }
+
+    .danger {
+      background: #4b2020;
+      color: #ffaaaa;
+      border: 1px solid #713333;
+    }
+
+    .success {
+      background: #173b2b;
+      color: #8ee5b7;
+    }
+
+    .message {
+      margin-top: 13px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--gold-light);
+    }
+
+    .topbar {
+      background: #111;
+      border-bottom: 1px solid #3d321d;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 19px;
+      color: var(--gold-light);
+    }
+
+    .user-info {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .section-title {
+      color: var(--gold-light);
+      font-size: 18px;
+      margin: 25px 0 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 13px;
+    }
+
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 18px;
+      border-radius: 13px;
+    }
+
+    .stat-card span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat-card strong {
+      display: block;
+      color: var(--gold-light);
+      font-size: 27px;
+      margin-top: 9px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 17px;
+      margin-top: 15px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .filters label { margin-top: 0; }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 15px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #303030;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--gold-light);
+      background: #202020;
+      position: sticky;
+      top: 0;
+    }
+
+    td { color: #ddd; }
+
+    .small-btn {
+      padding: 7px 10px;
+      font-size: 12px;
+      margin: 2px;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .team-card {
+      background: var(--panel2);
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .team-card span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .team-card strong {
+      display: block;
+      color: var(--gold-light);
+      font-size: 22px;
+      margin-top: 7px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: #000c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      z-index: 10;
+      overflow-y: auto;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 520px;
+      background: #171717;
+      border: 1px solid #66502a;
+      border-radius: 15px;
+      padding: 20px;
+      margin: auto;
+    }
+
+    .modal-card h3 {
+      color: var(--gold-light);
+      margin-top: 0;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 25px;
+    }
+
+    .loading {
+      color: var(--gold-light);
+      padding: 15px 0;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 13px; }
+      .topbar { padding: 13px; }
+      .topbar h2 { font-size: 16px; }
+      .login-card { padding: 25px 18px; }
+      .stat-card { padding: 14px; }
+      .stat-card strong { font-size: 23px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <section id="loginSection" class="login-wrap">
+    <div class="login-card">
+      <div class="brand">BOOTCAMP</div>
+      <div class="subtitle">ADMIN CONTROL PANEL</div>
+
+      <form id="loginForm">
+        <label>Username</label>
+        <input id="loginUsername" type="text" autocomplete="username" required>
+
+        <label>Password</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required>
+
+        <button class="primary full" id="loginBtn" type="submit">LOGIN</button>
+      </form>
+
+      <div id="loginMessage" class="message"></div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboardSection" class="hidden">
+    <header class="topbar">
+      <div>
+        <h2>BOOTCAMP ADMIN</h2>
+        <div class="user-info" id="userInfo">Logged in</div>
+      </div>
+      <button class="danger" id="logoutBtn">Logout</button>
+    </header>
+
+    <main class="container">
+      <h3 class="section-title">Dashboard Overview</h3>
+
+      <div class="stats">
+        <div class="stat-card">
+          <span>Total Registrations</span>
+          <strong id="totalCount">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>Selected Date</span>
+          <strong id="dateCount">0</strong>
+        </div>
+      </div>
+
+      <h3 class="section-title">Team Statistics</h3>
+      <div class="team-grid" id="teamStats">
+        <div class="empty">Statistics will appear here.</div>
+      </div>
+
+      <h3 class="section-title">Registration Records</h3>
+
+      <div class="panel">
+        <div class="filters">
+          <div>
+            <label>Select Date</label>
+            <select id="dateSelect">
+              <option value="">Loading dates...</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Search Registrations</label>
+            <input id="searchInput" type="search" placeholder="Name, WhatsApp, city...">
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button class="primary" id="refreshBtn">Refresh Data</button>
+          <button class="secondary" id="exportBtn">Export CSV</button>
+        </div>
+
+        <div id="dashboardMessage" class="message"></div>
+        <div id="tableLoading" class="loading hidden">Loading registrations...</div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>WhatsApp</th>
+                <th>City</th>
+                <th>Email</th>
+                <th>Description</th>
+                <th>Team</th>
+                <th>Mentor</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="registrationBody">
+              <tr><td colspan="10" class="empty">No data loaded.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADMIN MANAGEMENT -->
+      <section id="adminManagement" class="hidden">
+        <h3 class="section-title">Admin User Management</h3>
+
+        <div class="panel">
+          <h4>Create New Admin / Manager</h4>
+
+          <form id="createAdminForm">
+            <label>Username</label>
+            <input id="newUsername" required>
+
+            <label>Password</label>
+            <input id="newPassword" type="password" minlength="8" required>
+
+            <label>Role</label>
+            <select id="newRole">
+              <option value="manager">Manager</option>
+              <option value="admin">Admin</option>
+            </select>
+
+            <button class="primary full" type="submit">Create User</button>
+          </form>
+
+          <div id="adminMessage" class="message"></div>
+        </div>
+
+        <div class="panel">
+          <h4>Existing Admin Users</h4>
+          <div class="table-wrap">
+            <table style="min-width:600px">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersBody">
+                <tr><td colspan="4" class="empty">Loading users...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <div id="generalMessage" class="message"></div>
+    </main>
+  </section>
+
+  <!-- EDIT MODAL -->
+  <div id="editModal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Edit Registration</h3>
+
+      <form id="editForm">
+        <label>Full Name</label>
+        <input id="editName" required>
+
+        <label>Age</label>
+        <input id="editAge" type="number" min="18" max="60" required>
+
+        <label>WhatsApp Number</label>
+        <input id="editWhatsapp" type="tel" required>
+
+        <label>City</label>
+        <input id="editCity" required>
+
+        <label>Email Address</label>
+        <input id="editEmail" type="email">
+
+        <label>What best describes you?</label>
+        <select id="editDescription">
+          <option>Student</option>
+          <option>Housewife</option>
+          <option>Job-Holder/Businessman</option>
+          <option>Unemployed</option>
+        </select>
+
+        <label>Team</label>
+        <select id="editTeam">
+          <option>TEAM SHIVAM</option>
+          <option>TEAM JATIN</option>
+          <option>TEAM SAHIL</option>
+          <option>TEAM KETAN</option>
+          <option>TEAM MEGHA</option>
+          <option>TEAM ISHIKA</option>
+        </select>
+
+        <label>Mentor Name</label>
+        <input id="editMentor">
+
+        <div class="modal-actions">
+          <button class="primary" type="submit">Save Changes</button>
+          <button class="secondary" type="button" id="closeEditBtn">Cancel</button>
+        </div>
+        <div id="editMessage" class="message"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- RESET PASSWORD MODAL -->
+  <div id="passwordModal" class="modal hidden">
+    <div class="modal-card">
+      <h3>Reset User Password</h3>
+      <p id="passwordUsername" class="user-info"></p>
+
+      <label>New Password</label>
+      <input id="resetPasswordInput" type="password" minlength="8">
+
+      <div class="modal-actions">
+        <button class="primary" id="resetPasswordBtn">Update Password</button>
+        <button class="secondary" id="closePasswordBtn">Cancel</button>
+      </div>
+      <div id="passwordMessage" class="message"></div>
+    </div>
+  </div>
+
+<script>
+  const API = "/.netlify/functions/api";
+
+  let token = "";
+  let currentRole = "";
+  let currentUsername = "";
+  let registrations = [];
+  let selectedDate = "";
+  let editingRecord = null;
+  let resetUsername = "";
+
+  const $ = id => document.getElementById(id);
+
+  async function api(action, args = []) {
+    const response = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, args })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || result.success === false) {
+      throw new Error(result.message || "Something went wrong.");
+    }
+
+    return result;
+  }
+
+  function showMessage(id, message, isError = false) {
+    const element = $(id);
+    element.textContent = message;
+    element.style.color = isError ? "#ff8585" : "#f2d58b";
+  }
+
+  function getArray(result, keys) {
+    for (const key of keys) {
+      if (Array.isArray(result[key])) return result[key];
+    }
+    return [];
+  }
+
+  function getValue(object, keys, fallback = "") {
+    for (const key of keys) {
+      if (object && object[key] !== undefined && object[key] !== null) {
+        return object[key];
+      }
+    }
+    return fallback;
+  }
+
+  // LOGIN
+  $("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const username = $("loginUsername").value.trim();
+    const password = $("loginPassword").value;
+
+    $("loginBtn").disabled = true;
+    $("loginBtn").textContent = "PLEASE WAIT...";
+    showMessage("loginMessage", "Checking login details...");
+
+    try {
+      const result = await api("adminLogin", [username, password]);
+
+      token = result.token || result.data?.token || "";
+      currentRole = String(result.role || result.data?.role || "").toLowerCase();
+      currentUsername = result.username || result.data?.username || username;
+
+      if (!token) throw new Error("Login response did not contain a session token.");
+
+      $("loginSection").classList.add("hidden");
+      $("dashboardSection").classList.remove("hidden");
+
+      $("userInfo").textContent = currentUsername + " • " + currentRole;
+
+      if (currentRole === "admin" || currentRole === "superadmin") {
+        $("adminManagement").classList.remove("hidden");
+        loadAdminUsers();
+      }
+
+      await loadDashboard();
+
+    } catch (error) {
+      showMessage("loginMessage", error.message, true);
+    } finally {
+      $("loginBtn").disabled = false;
+      $("loginBtn").textContent = "LOGIN";
+    }
+  });
+
+  // DASHBOARD
+  async function loadDashboard() {
+    $("tableLoading").classList.remove("hidden");
+    showMessage("dashboardMessage", "Loading dashboard...");
+
+    try {
+      const result = await api("getDashboardData", [token, selectedDate]);
+
+      const dates = getArray(result, ["dates", "dateTabs"]);
+      const records = getArray(result, ["registrations", "records"]);
+
+      registrations = records;
+
+      const dateSelect = $("dateSelect");
+      const previousDate = selectedDate;
+
+      dateSelect.innerHTML = "";
+
+      dates.forEach(item => {
+        const value = typeof item === "string"
+          ? item
+          : getValue(item, ["date", "name", "tabName"], "");
+
+        if (!value) return;
+
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        dateSelect.appendChild(option);
+      });
+
+      if (dates.length) {
+        const available = [...dateSelect.options].some(o => o.value === previousDate);
+
+        selectedDate = available ? previousDate : dateSelect.options[0].value;
+        dateSelect.value = selectedDate;
+      }
+
+      $("totalCount").textContent = getValue(
+        result, ["totalCount", "totalRegistrations", "total"], records.length
+      );
+
+      $("dateCount").textContent = getValue(
+        result, ["dateCount", "todayCount", "count"], records.length
+      );
+
+      renderTeamStats(result);
+      renderRegistrations();
+
+      showMessage("dashboardMessage", "Dashboard updated.");
+
+    } catch (error) {
+      showMessage("dashboardMessage", error.message, true);
+      $("registrationBody").innerHTML =
+        `<tr><td colspan="10" class="empty">Unable to load records.</td></tr>`;
+    } finally {
+      $("tableLoading").classList.add("hidden");
+    }
+  }
+
+  function renderTeamStats(result) {
+    const container = $("teamStats");
+    container.innerHTML = "";
+
+    const counts = result.teamCounts || result.counts || {};
+
+    if (Array.isArray(counts)) {
+      counts.forEach(item => {
+        const name = getValue(item, ["team", "name", "teamName"], "Other");
+        const count = getValue(item, ["count", "total"], 0);
+        addTeamCard(container, name, count);
+      });
+    } else {
+      Object.entries(counts).forEach(([name, count]) => {
+        addTeamCard(container, name, count);
+      });
+    }
+
+    if (!container.children.length) {
+      container.innerHTML = '<div class="empty">No team statistics available.</div>';
+    }
+  }
+
+  function addTeamCard(container, name, count) {
+    const card = document.createElement("div");
+    card.className = "team-card";
+
+    const label = document.createElement("span");
+    label.textContent = name;
+
+    const number = document.createElement("strong");
+    number.textContent = count;
+
+    card.append(label, number);
+    container.appendChild(card);
+  }
+
+  function renderRegistrations() {
+    const body = $("registrationBody");
+    const search = $("searchInput").value.toLowerCase().trim();
+
+    const filtered = registrations.filter(record => {
+      return Object.values(record).some(value =>
+        String(value ?? "").toLowerCase().includes(search)
+      );
+    });
+
+    body.innerHTML = "";
+
+    if (!filtered.length) {
+      body.innerHTML = '<tr><td colspan="10" class="empty">No registrations found.</td></tr>';
+      return;
+    }
+
+    filtered.forEach((record, index) => {
+      const tr = document.createElement("tr");
+
+      const fields = [
+        index + 1,
+        getValue(record, ["fullName", "name"]),
+        getValue(record, ["age"]),
+        getValue(record, ["whatsapp", "phone"]),
+        getValue(record, ["city"]),
+        getValue(record, ["email"]),
+        getValue(record, ["description", "occupation"]),
+        getValue(record, ["team"]),
+        getValue(record, ["mentor"])
+      ];
+
+      fields.forEach(value => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+
+      const actionCell = document.createElement("td");
+      const editButton = document.createElement("button");
+      editButton.className = "primary small-btn";
+      editButton.textContent = "Edit";
+      editButton.addEventListener("click", () => openEdit(record));
+
+      actionCell.appendChild(editButton);
+      tr.appendChild(actionCell);
+      body.appendChild(tr);
+    });
+  }
+
+  $("searchInput").addEventListener("input", renderRegistrations);
+
+  $("dateSelect").addEventListener("change", async function() {
+    selectedDate = this.value;
+    await loadDashboard();
+  });
+
+  $("refreshBtn").addEventListener("click", loadDashboard);
+
+  // EDIT REGISTRATION
+  function openEdit(record) {
+    editingRecord = record;
+
+    $("editName").value = getValue(record, ["fullName", "name"]);
+    $("editA
